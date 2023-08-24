@@ -1,5 +1,8 @@
 function solution(s) {
-  let numbers = [
+  let answer = [];
+  let str = [];
+  s = s.split('');
+  let words = [
     'zero',
     'one',
     'two',
@@ -11,13 +14,18 @@ function solution(s) {
     'eight',
     'nine',
   ];
-  var answer = s;
-
-  for (let i = 0; i < numbers.length; i++) {
-    let arr = answer.split(numbers[i]);
-    answer = arr.join(i);
+  for (const element of s) {
+    if (Number(element) || Number(element) === 0) {
+      answer.push(Number(element));
+    } // 숫자면
+    else {
+      str.push(element);
+      let index = words.indexOf(str.join(''));
+      if (index !== -1) {
+        answer.push(index);
+        str = [];
+      }
+    } // 문자열이면
   }
-
-  return Number(answer);
+  return Number(answer.join(''));
 }
-console.log(solution('one1two'));
