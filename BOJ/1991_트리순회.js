@@ -1,61 +1,37 @@
-const solution = (input) => {
-  const N = +input[0];
-  input = input.slice(1);
-  const tree = {};
-  for (let i = 0; i < N; i++) {
-    const [node, left, right] = input[i].split(' ');
-    tree[node] = [left, right];
-  }
-  let result = '';
+let fs = require('fs');
+let path = process.platform === 'linux' ? '/dev/stdin' : 'test.txt';
+let [n, ...input] = fs.readFileSync(path).toString().trim().split('\n');
 
-  const preOrder = (node) => {
-    if (node === '.') {
-      return;
-    }
-
-    const [left, right] = tree[node];
-    result += node;
-    preOrder(left);
-    preOrder(right);
-  };
-
-  const inOrder = (node) => {
-    if (node === '.') {
-      return;
-    }
-
-    const [left, right] = tree[node];
-    inOrder(left);
-    result += node;
-    inOrder(right);
-  };
-
-  const postOrder = (node) => {
-    if (node === '.') {
-      return;
-    }
-
-    const [left, right] = tree[node];
-    postOrder(left);
-    postOrder(right);
-    result += node;
-  };
-  preOrder('A');
-  result += '\n';
-  inOrder('A');
-  result += '\n';
-  postOrder('A');
-
-  return result;
-};
-
-const input = [];
-require('readline')
-  .createInterface(process.stdin, process.stdout)
-  .on('line', (line) => {
-    input.push(line);
-  })
-  .on('close', () => {
-    console.log(solution(input));
-    process.exit();
-  });
+let answer = '';
+function pre(tree, v) {
+  if (v === '.') return;
+  answer += v;
+  pre(tree, tree[v][0]);
+  pre(tree, tree[v][1]);
+}
+function mid(tree, v) {
+  if (v === '.') return;
+  mid(tree, tree[v][0]);
+  answer += v;
+  mid(tree, tree[v][1]);
+}
+function last(tree, v) {
+  if (v === '.') return;
+  last(tree, tree[v][0]);
+  last(tree, tree[v][1]);
+  answer += v;
+}
+const tree = {};
+const root = input[0].trim().split(' ')[0];
+for (let i = 0; i < input.length; i++) {
+  const [a, b, c] = input[i].trim().split(' ');
+  tree[a] = [b, c];
+}
+pre(tree, root);
+console.log(answer);
+answer = '';
+mid(tree, root);
+console.log(answer);
+answer = '';
+last(tree, root);
+console.log(answer);
